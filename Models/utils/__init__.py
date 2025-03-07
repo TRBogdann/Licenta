@@ -1,3 +1,3 @@
-__all__ = ["outlier"]
+__all__ = ["outlier","logger","callbacks"]
 
 from . import outlier
