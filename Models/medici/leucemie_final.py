@@ -7,17 +7,16 @@ import tensorflow as tf
 import numpy as np
 from keras.src.models import Sequential
 from keras.src.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten, Input, LeakyReLU, GlobalAveragePooling2D, BatchNormalization, RandomFlip, RandomRotation, RandomZoom
-from sklearn.utils.class_weight import compute_class_weight
 from keras.src.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.src.regularizers import L2
-from utils.loss_functions import focal_loss
 
-dir_original_data = "./dataIN/Leucemie/Original"
+dir_original_data = "./dataIN/Leucemie/Segmented_Predict"
 
 train_dataset = keras.utils.image_dataset_from_directory(
     dir_original_data,
     labels="inferred",
     label_mode='categorical',
+    color_mode='grayscale',
     validation_split=0.2,
     subset='training',
     seed=42,
@@ -29,19 +28,12 @@ test_dataset = keras.utils.image_dataset_from_directory(
     labels="inferred",
     label_mode='categorical',
     validation_split=0.2,
+    color_mode='grayscale',
     subset='validation',
     seed=42,
     image_size=(224, 224)
 )
 
-
-y_label = []
-for images, labels in train_dataset:
-    y_label.extend(labels.numpy())
-y_label = np.array(y_label)
-y_label_int = np.argmax(y_label, axis=1)
-class_weights = compute_class_weight("balanced", classes=np.unique(y_label_int), y=y_label_int)
-class_weights_dict = dict(enumerate(class_weights))
 
 data_augmentation = Sequential([
     RandomFlip("horizontal_and_vertical"),
@@ -49,7 +41,7 @@ data_augmentation = Sequential([
 ])
 
 model = Sequential([
-    Input(shape=(224, 224, 3)),
+    Input(shape=(224, 224, 1)),
     data_augmentation,
     Conv2D(filters=32, kernel_size=(3, 3), padding='same'),
     BatchNormalization(),
@@ -79,12 +71,20 @@ model.compile(
 )
 
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-model_checkpoint = ModelCheckpoint('./dataOUT/leucemie_balanced.keras', save_best_only=True, monitor='val_loss')
+model_checkpoint = ModelCheckpoint('./dataOUT/leucemie_final.keras', save_best_only=True, monitor='val_loss')
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=1e-6)
+
+
+class_weights_dict = {
+    0:1.2,
+    1:1.0,
+    2:1.0,
+    3:1.0
+}
 
 history = model.fit(
     train_dataset,
-    epochs=12,
+    epochs=20,
     validation_data=test_dataset,
     callbacks=[early_stopping, model_checkpoint, reduce_lr],
     class_weight=class_weights_dict

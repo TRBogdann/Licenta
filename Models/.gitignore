@@ -4,3 +4,4 @@ used.txt
 __pycache__/
 .venv/
 venv/
+info/

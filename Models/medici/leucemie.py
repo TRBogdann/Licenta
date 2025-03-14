@@ -31,7 +31,7 @@ test_dataset = keras.utils.image_dataset_from_directory(
 
 y_label = []
 for images, labels in train_dataset:
-    y_label.extend(labels.numpy())  # Convert tensor to numpy array and append
+    y_label.extend(labels.numpy())  
 
 y_label = np.array(y_label)
 
