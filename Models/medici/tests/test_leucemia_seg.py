@@ -11,18 +11,10 @@ from PIL import Image
 import utils.image as img
 
 
-color_0 = np.array([0, 0, 0])          
-color_1 = np.array([249,220,178])  
-color_05 = np.array([190,58,142])       
-
-color_0 = color_0 / 255.0
-color_05 = color_05 / 255.0
-color_1 = color_1 / 255.0
-
 colors = [
-    color_0,         
-    color_05,  
-    color_1      
+    np.array([0, 0, 0]),         
+    np.array([190,58,142])/255,  
+    np.array([249,220,178])/255 
 ]
 
 
@@ -58,7 +50,7 @@ for image_file in selected_files:
 
     plt.subplot(1, 4, 1)
     plt.title("Input Image")
-    plt.imshow(input_image[0, :, :, 0], cmap='gray')  # Assuming grayscale input
+    plt.imshow(input_image[0, :, :, 0], cmap='gray')
     plt.axis('off')
 
 
