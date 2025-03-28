@@ -1,3 +1,3 @@
-
-For now just 'medici' folder.
-Still in early stage
+Current Deadline: End of May\
+Early Stage\
+-Currently most of the code is located in Models/medici
