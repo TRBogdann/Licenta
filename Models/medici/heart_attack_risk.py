@@ -131,21 +131,21 @@ for it in categorical_values:
     plt.show()
 
 #Balancing Features
-sns.countplot(x=df['Gender']*df['Smoking']*df['Diabetes'])
-plt.title("Balanced")
+# sns.countplot(x=df['Gender']*df['Smoking']*df['Diabetes'])
+# plt.title("Balanced")
 
-df['Balanced'] = df['Gender']*df['Smoking']*df['Diabetes']
-df = df.drop(columns=['Gender','Smoking','Diabetes'])
+# df['Balanced'] = df['Gender']*df['Smoking']*df['Diabetes']
+# df = df.drop(columns=['Gender','Smoking','Diabetes'])
 
-categorical_values = ['Family History','Balanced','Obesity','Alcohol Consumption',
-                      'Diet','Previous Heart Problems']
+# categorical_values = ['Family History','Balanced','Obesity','Alcohol Consumption',
+#                       'Diet','Previous Heart Problems']
 
 
 #Outlier
-for it in df.drop(columns=categorical_values+label).columns:
-    sns.boxplot(df[it])
-    plt.title(it)
-    plt.show()
+# for it in df.drop(columns=categorical_values+label).columns:
+#     sns.boxplot(df[it])
+#     plt.title(it)
+#     plt.show()
         
 
 X_train,X_test,y_train,y_test = train_test_split(df.drop(columns=label),df[label[0]],train_size=0.75)

@@ -5,6 +5,7 @@ import numpy as np
 import keras
 from keras.preprocessing.image import load_img, img_to_array
 from PIL import Image
+import nibabel as nib
 
 decoder = {
     "png":tf.image.decode_png,
@@ -24,7 +25,7 @@ def preprocess_image(image_path, target_size,color_mode="rgb"):
 
 def apply_gradient(mask,colors):
     height, width = mask.shape
-    gradient_image = np.zeros((height, width, 3))  # Create an empty RGB image
+    gradient_image = np.zeros((height, width, 3)) 
     growth = 1/(len(colors)-1)
     for y in range(height):
         for x in range(width):
@@ -87,3 +88,88 @@ def create_dataset(input_folder, output_folder,img_format="png", target_size=(25
     val_dataset = val_dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
 
     return train_dataset, val_dataset
+
+def load_nii_file(filepath,first_slice=0,last_slice=-1,extend = False):
+    nii_file = nib.load(filepath)
+    data = np.array(nii_file.get_fdata(), dtype=np.float32)
+    data = data / np.max(data)
+    if extend:
+        data = np.expand_dims(data, axis=-1)
+    
+    if first_slice !=0 and last_slice != -1:
+        return data[first_slice:last_slice,:,:]
+    
+    return data
+
+def load_nii_dataset(input_filepaths, output_filepaths, shape=(240, 240, 155),first_slice=0,last_slice=-1,extend = False,encode_depth=1):
+    def generator():
+        for input_file, output_file in zip(input_filepaths, output_filepaths):
+            input_nii = load_nii_file(input_file,first_slice=first_slice,last_slice=last_slice,extend = extend)
+            output_nii = load_nii_file(output_file,first_slice=first_slice,last_slice=last_slice,extend = extend and encode_depth==1)
+            if encode_depth > 1:
+                output_nii = np.floor(output_nii*encode_depth)
+                output_nii = tf.convert_to_tensor(output_nii, dtype=tf.int32)
+                output_nii = tf.one_hot(output_nii, depth=encode_depth)
+            yield input_nii, output_nii
+    
+    
+    output_shape = shape
+    input_shape = shape
+    
+    if extend:
+        shape_list = list(shape)
+        shape_list.append(1)
+        input_shape = tuple(shape_list)
+        
+        shape_list[-1] = encode_depth
+        output_shape = tuple(shape_list)
+        
+    print(input_shape)
+    print(output_shape)
+    dataset = tf.data.Dataset.from_generator(
+        generator=generator,
+        output_signature=(
+            tf.TensorSpec(shape=input_shape, dtype=tf.float32),
+            tf.TensorSpec(shape=output_shape, dtype=tf.float32)
+        )
+    )
+        
+    return dataset
+
+def load_slice_dataset(input_filepaths, output_filepaths, shape=(240, 240, 155),first_slice=0,last_slice=-1,extend = False,encode_depth=1,check=False):
+    def generator():
+        for input_file, output_file in zip(input_filepaths, output_filepaths):
+            input_nii = load_nii_file(input_file,first_slice=first_slice,last_slice=last_slice)
+            output_nii = load_nii_file(output_file,first_slice=first_slice,last_slice=last_slice)
+            for input_slice,output_slice in zip(input_nii,output_nii):
+                if extend:
+                    input_slice = np.expand_dims(input_slice, axis=-1)
+                    output_slice =  output_slice*encode_depth
+                    output_slice = np.where(output_slice==4,3,output_slice)
+                    unique_elements, counts = np.unique(output_slice, return_counts=True)
+                    output_slice = tf.convert_to_tensor(output_slice, dtype=tf.int32)
+                    output_slice = tf.one_hot(output_slice, depth=encode_depth)
+                yield input_slice, output_slice
+    
+    output_shape = shape
+    input_shape = shape
+    
+    if extend:
+        shape_list = list(shape)
+        shape_list.append(1)
+        input_shape = tuple(shape_list)
+        
+        shape_list[-1] = encode_depth
+        output_shape = tuple(shape_list)
+        
+    print(input_shape)
+    print(output_shape)
+    dataset = tf.data.Dataset.from_generator(
+        generator=generator,
+        output_signature=(
+            tf.TensorSpec(shape=input_shape, dtype=tf.float32),
+            tf.TensorSpec(shape=output_shape, dtype=tf.float32)
+        )
+    )
+        
+    return dataset
