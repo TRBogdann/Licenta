@@ -1,7 +1,7 @@
 import tensorflow as tf
 from keras.src.layers import Add,Multiply,ZeroPadding2D,Dropout,ZeroPadding3D, BatchNormalization, LeakyReLU, ReLU, Conv2D, MaxPooling2D, UpSampling2D,  Conv3D, MaxPooling3D, UpSampling3D,concatenate, Input
 from keras.src.models import Model
-from custom_layers import activations,DropOut,Normalize,IdentityBlock
+from .custom_layers import activations,DropOut,Normalize,IdentityBlock
 
 def Reshape3D(original_block,up):
     if up.shape[1] != original_block.shape[1] or up.shape[2] != original_block.shape[2] or up.shape[3] != original_block.shape[3]:

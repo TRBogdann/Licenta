@@ -1,6 +1,6 @@
 import tensorflow as tf
 from keras.src.layers import Add,Multiply,ZeroPadding2D,Dropout,ZeroPadding3D, BatchNormalization, LeakyReLU, ReLU, Conv2D, MaxPooling2D, UpSampling2D,  Conv3D, MaxPooling3D, UpSampling3D,concatenate, Input
-from custom_layers import activations,DropOut,Normalize,IdentityBlock
+from .custom_layers import activations,DropOut,Normalize,IdentityBlock
 
 def SimpleResidualBlock(input_block, filter_size, kernel_size=(3,3), padding="same",
                  activation="relu", slope=0.0, pool_size=(2,2),
