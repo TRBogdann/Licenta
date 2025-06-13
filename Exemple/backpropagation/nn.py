@@ -8,8 +8,8 @@ def softmax(x):
 def relu(x):
     return np.maximum(0, x)
 
-def relu_derivative(x):
-    return (x > 0).astype(float)
+def apply_relu_derivative(err,x):
+    return err*(x > 0).astype(float)
 
 def categorical_cross_entropy(y_true, y_pred, epsilon=1e-12):
     y_pred = np.clip(y_pred, epsilon, 1. - epsilon)
@@ -76,30 +76,40 @@ class MLP:
 
         error = (output - y)
 
-        grad_weight = activations[-1].T.dot(error)
+        #Inmultind batch-ul activarilor cu cel al errorilor obtinem suma err*act din batch
+        #Obtinem media impartind la nr de instante din batch 
+        grad_weight = (activations[-1].T.dot(error))/error.shape[0]
         grad_bias = np.mean(error, axis=0)
+        
+        #Eroarea care va fi propagata stratului anterior
+        error = error.dot(self.output.weight.T)
+        
+        #Ajustarea cu gradientul
         self.output.weight -= lr * grad_weight
         self.output.bias -= lr * grad_bias
 
-        error = error.dot(self.output.weight.T)
+        
+        
+
         for i in reversed(range(len(self.layers))):
             layer = self.layers[i]
-            d_activation = relu_derivative(layer_inputs[i])
-            error *= d_activation
+            error = apply_relu_derivative(error,layer_inputs[i])
 
-            grad_weight = activations[i].T.dot(error)
+            grad_weight = (activations[i].T.dot(error))/error.shape[0]
             grad_bias = np.mean(error, axis=0)
-
+            
+            #Eroarea care va fi propagata stratului anterior
+            error = error.dot(layer.weight.T)
+            
+            #Ajustarea cu gradientul
             layer.weight -= lr * grad_weight
             layer.bias -= lr * grad_bias
 
 
-            error = error.dot(layer.weight.T)
-
         final_output = self.forwardpass(x)
         return categorical_cross_entropy(y, final_output)
 
-    def fit(self, train_dataset, test_dataset=None, epochs=30, learning_rate=1e-5, verbose=True):
+    def fit(self, train_dataset, test_dataset=None, epochs=30, learning_rate=1e-3, verbose=True):
         for epoch in range(epochs):
             total_loss = 0
             for x, y in zip(train_dataset.x, train_dataset.y):

@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 train = Dataset('train',10)
 test = Dataset('test',10)
-model = MLP(784,10,[256,128])
-model.fit(train,test,20)
+model = MLP(784,10,[256,128,64])
+model.fit(train,test,50)
 
 layer0 = model.layers[0].forwardpass(test.x[0])
 for i, (img, fmap) in enumerate(zip(test.x[0], layer0)):
