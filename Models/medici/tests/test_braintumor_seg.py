@@ -96,9 +96,9 @@ def combined_loss(y_true, y_pred):
     cce = keras.losses.CategoricalCrossentropy()
     return dice + 0.25 * cce(y_true, y_pred)
         
-model_path = '../dataOUT/brain_part_I.keras'
-input_path = '../dataIN/MICCAI_BraTS2020_TrainingData/BraTS20_Training_015/BraTS20_Training_015_flair.nii'
-output_path = '../dataIN/MICCAI_BraTS2020_TrainingData/BraTS20_Training_015/BraTS20_Training_015_seg.nii'
+model_path = '../dataOUT/brain_seg.keras'
+input_path = '../dataIN/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData/BraTS20_Training_001/BraTS20_Training_001_flair.nii'
+output_path = '../dataIN/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData/BraTS20_Training_001/BraTS20_Training_001_seg.nii'
 
 input_nii = img.load_nii_file(input_path,first_slice=56,last_slice=-56)
 output_nii = img.load_nii_file(output_path,first_slice=56,last_slice=-56)
@@ -130,11 +130,8 @@ for input_slice,true_img in zip(input_nii,output_nii):
     
     # Predict
     pred = model.predict(tensor)
-    # pred = np.squeeze(pred, axis=0) 
-    
- 
-    segmentation_map = pred[0, :, :, 0] 
-    segmentation_map = np.where(segmentation_map<0.5,0,1)
+    pred = np.squeeze(pred, axis=0) 
+    segmentation_map = np.argmax(pred, axis=-1) 
 
     plt.subplot(1, 3, 1)
     plt.title("Input")

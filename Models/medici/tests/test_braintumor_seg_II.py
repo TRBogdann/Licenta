@@ -136,9 +136,10 @@ for input_slice,unmerged_slice,true_img in zip(input_nii,unmerged_nii,output_nii
     # pred = np.squeeze(pred, axis=0) 
     
  
-    segmentation_map = pred[0, :, :, 0] 
-    segmentation_map = np.where(segmentation_map<0.5,0,1)
-
+    pred = model.predict(tensor)
+    pred = np.squeeze(pred, axis=0) 
+    segmentation_map = np.argmax(pred, axis=-1) 
+    
     plt.subplot(1, 3, 1)
     plt.title("Input")
     plt.imshow(rotate(keep, 90, resize=True),cmap='gray')

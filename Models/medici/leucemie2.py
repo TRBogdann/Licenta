@@ -87,5 +87,4 @@ history = model.fit(
     epochs=12,
     validation_data=test_dataset,
     callbacks=[early_stopping, model_checkpoint, reduce_lr],
-    class_weight=class_weights_dict
 )
