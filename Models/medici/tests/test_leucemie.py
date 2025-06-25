@@ -5,10 +5,11 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix, accuracy_score
 
 dir_original_data = "../dataIN/Leucemie/Original"
-model_path = "../dataOUT/leucemie.keras"
+model_path = "../dataOUT/leucemie_balanced.keras"
 
 model = keras.models.load_model(model_path)
 model.summary()
+model_seg = keras.models.load_model(model_path)
 
 test_dataset = keras.utils.image_dataset_from_directory(
     dir_original_data,
