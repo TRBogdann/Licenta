@@ -58,6 +58,7 @@ cd Licenta/desktop-app
 chmod +x install.sh
 ./install.sh
 ```
+![brain](rmassets/b3.jpg)
 
 ### Web-App
 
@@ -81,6 +82,10 @@ Then you can run using
 npm start
 ```
 
+You should se something like this:
+
+![main page](rmassets/main_page.jpg)
+
 #### Server
 
 __Warning: The models might be incompatible with your current version of ternsorflow or keras. If that's the case (the model cannot be loaded) make sure to downgrade it__
@@ -93,4 +98,8 @@ python3 -m venv .venv
 python3 -r install requirements.txt
 ```
 
-Download models
+Start
+
+```bash
+python3 main.py
+```
