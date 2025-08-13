@@ -1,0 +1,143 @@
+:root
+{
+  --c1: rgb(13, 8, 135);
+  --c2: rgb(75, 3, 161);
+  --c3: rgb(133, 21, 158);
+  --c4: rgb(185, 55, 123);
+  --c5: rgb(229, 101, 71);
+  --c6: rgb(249, 253, 56);
+  --t1: rgba(133, 21, 158,0.3);
+  --t2: rgba(229, 101, 71,0.3);
+  font-size: 15px;
+  text-shadow:
+  0.5px 0.5px 1px var(--c5),
+  0 0 0.5em var(--c1),
+  0 0 0.1em var(--c2);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white;
+  background: rgb(12, 12, 12);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+*,*::after,*::before
+{
+  padding: 0;
+  margin: 0;
+}
+
+.btn-template-light
+{
+  color: black;
+  font-weight: 600;
+  width: 8rem;
+  height: 2rem;
+  border-radius: 1rem;
+  border: none;
+  box-shadow: -0.3rem -0.5rem 0.7rem 0 var(--t1), 0.3rem  0.5rem 0.7rem 0 var(--t2);
+  
+}
+
+.btn-template-light-short {
+  color: black;
+  background-color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-template-light-short:hover {
+  background-color: var(--t1, #f0f0f0);
+  color: var(--hover-text-color, #333);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-template-light-short:focus,
+.btn-template-light-short:active {
+  outline: none;
+  background-color: var(--t2, #e0e0e0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.btn-template-dark
+{
+  color: white  ;
+  border-radius: 1rem;
+  border:0.1rem solid white ;
+  width: 8rem;
+  height: 2rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.btn-template-dark:hover
+{
+  background: linear-gradient(to right, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6));
+  border: none;
+  cursor: pointer;
+}
+
+.btn-template-short
+{
+  color: white  ;
+  border-radius: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.btn-template-short:hover
+{
+  background: linear-gradient(to right, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6));
+  border: none;
+  cursor: pointer;
+}
+
+.btn-template-triangle-container {
+  overflow: hidden;
+  height: 2rem;
+  width: 4rem;
+}
+
+.btn-template-triangle {
+  width: 100%;
+  height: 100%;
+  background: white;
+  transform-origin: 0 100%;
+  transform: rotate(45deg);
+}
+
+.right-orientation{
+  transform: rotate(90deg);
+}
+
+.left-orientation
+{
+  transform: rotate(-90deg);
+}
+
+.btn-template-triangle:hover
+{
+  background: linear-gradient(to bottom, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6));
+}
+

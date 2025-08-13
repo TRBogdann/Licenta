@@ -1,0 +1,157 @@
+import tensorflow as tf
+from keras.src.layers import ZeroPadding2D,Dropout,ZeroPadding3D, BatchNormalization, LeakyReLU, ReLU, Conv2D, MaxPooling2D, UpSampling2D,  Conv3D, MaxPooling3D, UpSampling3D,concatenate, Input
+from keras.src.models import Model
+
+
+def GeLu(negative_slope=0.01):
+    return gelu
+    
+activations = {
+    'relu': ReLU,
+    'leaky_relu': LeakyReLU,
+}
+
+
+def Reshape3D(original_block,up):
+    if up.shape[1] != original_block.shape[1] or up.shape[2] != original_block.shape[2] or up.shape[3] != original_block.shape[3]:
+        diff_depth = original_block.shape[1] - up.shape[1]
+        diff_height = original_block.shape[2] - up.shape[2]
+        diff_width = original_block.shape[3] - up.shape[3]
+
+        up = ZeroPadding3D(((diff_depth // 2, diff_depth - diff_depth // 2),
+            (diff_height // 2, diff_height - diff_height // 2),
+            (diff_width // 2, diff_width - diff_width // 2))
+        )(up)
+    return up
+
+def Reshape2D(original_block, up):
+    if up.shape[1] != original_block.shape[1] or up.shape[2] != original_block.shape[2]:
+        diff_height = original_block.shape[1] - up.shape[1]
+        diff_width = original_block.shape[2] - up.shape[2]
+
+        up = ZeroPadding2D(((diff_height // 2, diff_height - diff_height // 2),
+                            (diff_width // 2, diff_width - diff_width // 2)))(up)
+    return up
+
+def IdentityBlock(x):
+
+    return x
+
+def Normalize(x, normalize):
+
+    return BatchNormalization()(x) if normalize else x
+
+def DropOut(x, drop_out):
+
+    return Dropout(drop_out)(x) if 0.0 < drop_out < 1.0 else x
+
+def EncoderBlock(input_block, filter_size, kernel_size=3, padding="same",
+                 activation="relu", slope=0.0, pool_size=(2,2),
+                 batch_normalization=False, drop_out=0.0):
+
+    conv = Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding)(input_block)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    conv = Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding)(conv)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    pool = MaxPooling2D(pool_size=pool_size)(conv)
+    pool = DropOut(pool, drop_out)
+
+    return conv, pool
+
+def BottleneckBlock(input_block, filter_size, kernel_size=3, padding="same",
+                    activation="relu", slope=0.0, batch_normalization=False):
+
+    conv = Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding)(input_block)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    conv = Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding)(conv)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    return conv
+
+def DecoderBlock(input_block, original_block, filter_size, kernel_size=3, padding="same",
+                 activation="relu", slope=0.0, batch_normalization=False, drop_out=0.0):
+   
+    up = UpSampling2D(size=(2,2))(input_block)
+    up = Conv2D(filters=filter_size, kernel_size=kernel_size-1, padding=padding)(up)
+    up = Normalize(up, batch_normalization)
+    up = activations.get(activation, ReLU)(negative_slope=slope)(up)
+    
+    up = Reshape2D(original_block=original_block,up = up)
+    merge = concatenate([original_block, up], axis=3)
+    
+    conv = Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding)(merge)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    conv = Conv2D(filters=filter_size, kernel_size=kernel_size, padding=padding)(conv)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    return conv
+
+def OutputBlock(input_block,num_of_classes = 1,kernel_size=1,activation = "sigmoid",padding="same"):
+    return Conv2D(filters=num_of_classes,kernel_size=kernel_size,activation=activation,padding=padding)(input_block)
+
+
+
+def EncoderBlock3D(input_block, filter_size, kernel_size=3, padding="same",
+                 activation="relu", slope=0.0, pool_size=(2, 2, 2),
+                 batch_normalization=False, drop_out=0.0):
+    
+    conv = Conv3D(filters=filter_size, kernel_size=kernel_size, padding=padding)(input_block)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    conv = Conv3D(filters=filter_size, kernel_size=kernel_size, padding=padding)(conv)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+
+    pool = MaxPooling3D(pool_size=pool_size)(conv)
+    pool = DropOut(pool, drop_out)
+
+    return conv, pool
+
+def BottleneckBlock3D(input_block, filter_size, kernel_size=3, padding="same",
+                    activation="relu", slope=0.0, batch_normalization=False):
+    conv = Conv3D(filters=filter_size, kernel_size=kernel_size, padding=padding)(input_block)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    conv = Conv3D(filters=filter_size, kernel_size=kernel_size, padding=padding)(conv)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    return conv
+
+def DecoderBlock3D(input_block, original_block, filter_size, kernel_size=3, padding="same",
+                 activation="relu", slope=0.0, batch_normalization=False, drop_out=0.0):
+    up = UpSampling3D(size=(2, 2, 2))(input_block)
+    up = Conv3D(filters=filter_size, kernel_size=kernel_size-1, padding=padding)(up)
+    up = Normalize(up, batch_normalization)
+    up = activations.get(activation, ReLU)(negative_slope=slope)(up)
+    
+    up = Reshape3D(original_block=original_block,up=up)
+    merge = concatenate([original_block, up], axis=-1)
+    
+    conv = Conv3D(filters=filter_size, kernel_size=kernel_size, padding=padding)(merge)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    conv = Conv3D(filters=filter_size, kernel_size=kernel_size, padding=padding)(conv)
+    conv = Normalize(conv, batch_normalization)
+    conv = activations.get(activation, ReLU)(negative_slope=slope)(conv)
+    
+    return conv
+
+def OutputBlock3D(input_block, num_of_classes=1, kernel_size=1, activation="sigmoid", padding="same"):
+    return Conv3D(filters=num_of_classes, kernel_size=kernel_size, activation=activation, padding=padding)(input_block)
+
+def U_NET(inputs,outputs):
+    return Model(inputs,outputs)

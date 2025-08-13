@@ -1,0 +1,67 @@
+.app-navbar
+{
+    height: 5rem;
+    width: 100%;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+.log-button
+{
+    margin-left:30%;
+    color: black;
+    font-weight: 600;
+    width: 8rem;
+    height: 2rem;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: -0.3rem -0.5rem 0.7rem 0 var(--t1), 0.3rem  0.5rem 0.7rem 0 var(--t2);
+    
+    
+}
+
+.log-button:hover
+{
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.app-links
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width:46%;
+}
+
+.resizer
+{
+    width:27%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.app-links>a
+{
+    text-decoration: none;
+    color: white;
+}
+
+.app-links>div:hover
+{
+    cursor: pointer;
+    color: rgb(122, 122, 122);
+}
+
+.app-links>a:hover
+{
+    color: rgb(122, 122, 122);
+}

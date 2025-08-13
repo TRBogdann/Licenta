@@ -1,0 +1,63 @@
+
+.editor-border
+{
+
+    width: 22.5%;
+    height: 95%;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--c1), var(--c4), var(--c6));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.editor-bar
+{
+    background-color: rgba(14, 13, 13,0.99);
+    width: 99%;
+    height: 99.5%;
+    border-radius: 1rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.editor-controls
+{
+
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+
+}
+
+.editor-controls>div
+{
+    border-radius: 0.5rem;
+    height: 4rem;
+    width: 33%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    img {
+        block-size: 50%;
+    };
+}
+
+.editor-controls>div:hover
+{
+    background: linear-gradient(to right,var(--c1), var(--c4), var(--c6));
+}
+
+.center-container
+{
+    margin-top:1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

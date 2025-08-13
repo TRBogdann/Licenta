@@ -1,0 +1,83 @@
+.content
+{
+  width: 100vw;
+  height: 100vh;
+}
+
+.dna-logo
+{
+    height: 4rem;
+    width: 4rem;
+    animation: mymove 5s infinite;
+    border-radius: 50%;
+    background-color: #0f0f0f;
+
+}
+
+.logo-wrapper
+{
+    overflow: hidden;
+    border-radius: 50%;
+    width:3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes mymove {
+    50% {transform: rotate(180deg);}
+}
+
+
+.plasma-border {
+margin-left: 35%;
+overflow: hidden;
+width:3.3rem;
+height: 3.3rem;
+border-radius: 50%;
+background:conic-gradient(
+    var(--c2),
+    var(--c3),
+    var(--c4),
+    var(--c5),
+    var(--c2)
+);
+display: flex;
+justify-content: center;
+align-items: center;
+animation: myrot 5s infinite;
+}
+
+@keyframes myrot {
+    100% {transform: rotate(360deg);}
+}
+
+
+.plasma-border-no-animation {
+  margin:0.35rem;
+  overflow: hidden;
+  width:3.3rem;
+  height: 3.3rem;
+  border-radius: 50%;
+  background:conic-gradient(
+      var(--c2),
+      var(--c3),
+      var(--c4),
+      var(--c5),
+      var(--c2)
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+  .plasma-border:hover, .plasma-border-no-animation:hover
+{
+    background: var(--c1)
+}
+.refresh
+{
+    padding: 0;
+    margin: 0;
+}

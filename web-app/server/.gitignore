@@ -1,0 +1,7 @@
+.venv/
+test_ground/
+.dockerignore
+Dockerfile
+app.yaml
+data.db
+.env

@@ -1,0 +1,73 @@
+
+.image-viewer
+{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.canv-container
+{
+    border: 1px solid white;
+    width:45vw;
+    height: 45vw;
+}
+
+.image-viewer-grid {
+    width:75%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    overflow-y: auto; 
+}
+
+.canv-true
+{
+    width:45vw;
+    height: 45vw;
+}
+
+.canv-effects
+{
+    position: absolute;
+    width:45vw;
+    height: 45vw;
+    z-index: 2;
+}
+
+.canv-container-grid
+{
+    position: relative;
+    width:23vw;
+    height: 23vw;
+    border: 1px solid white;
+    margin-top: 1vw;
+
+}
+
+.selected-box
+{
+    border: 2px solid blue;
+}
+
+.canv-true-grid
+{
+    width:23vw;
+    height: 23vw;
+}   
+
+.canv-effects-grid
+{
+    width:23vw;
+    height: 23vw;
+    position: absolute;
+    z-index: 2;
+}
+
+.paint-mode
+{
+    cursor: crosshair;
+}
+

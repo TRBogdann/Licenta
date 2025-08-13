@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Mri Analyzer
+Comment= Brain scan visualization and tumor detection
+Exec=~/Licenta/desktop-app/run.sh
+Icon=~/Licenta/desktop-app/logo.png
+Terminal=false
+Type=Application
+Categories=Science;
