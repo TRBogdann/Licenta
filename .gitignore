@@ -1,2 +1,8 @@
 /desktop-app/masks
 /desktop-app/slices
+/desktop-app/mri-viewer/build
+/desktop-app/client/__pycache__/
+/desktop-app/client/imgui.ini
+/Exemple/__pycache__/
+/Exemple/backpropagation/__pycache__/
+/desktop-app/mri-viewer/brain.obj

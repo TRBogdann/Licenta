@@ -5,3 +5,4 @@ Dockerfile
 app.yaml
 data.db
 .env
+tools/__pycache__/
